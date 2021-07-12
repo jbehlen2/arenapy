@@ -2,9 +2,12 @@ import requests
 import json
 
 
+base_url = "https://api.arenasolutions.com/v1"
+
+
 # Access
 def login(email, password, workspaceId):
-    """Login to Arena BOM
+    """Begin API session
     
     :param email: email associated with Arena BOM account
     :param password: password associated with Arena BOM account
@@ -13,7 +16,7 @@ def login(email, password, workspaceId):
     :rtype: requests.Response
     """
 
-    url = "https://api.arenasolutions.com/v1/login"
+    url = base_url + "/login"
 
     payload = json.dumps({
         "email": email,
@@ -29,16 +32,14 @@ def login(email, password, workspaceId):
     return response
 
 def logout(sessionId):
-    """Logout of Arena BOM
+    """Close API session
     
-    :param email: email associated with Arena BOM account
-    :param password: password associated with Arena BOM account
-    :param workspaceId: (optional) the id of the accessed workspace
+    :param sessionId: token for current user session
     :return: :class:'Response <Response>' object
     :rtype: requests.Response
     """
 
-    url = "https://api.arenasolutions.com/v1/logout"
+    url = base_url + "/logout"
 
     payload = ""
     headers = {
@@ -50,10 +51,18 @@ def logout(sessionId):
 
     return response
 
-# Settings
-## Item Settings
-def itemSpecsAttributesGet(sessionId):
-    url = "https://api.arenasolutions.com/v1/settings/items/attributes?includePossibleValues=true"
+
+# Item
+def getItemSearch(sessionId, number):
+    """Search for items in Arena by number
+    
+    :param sessionId: token for current user session
+    :param number: item number to search by
+    :return: :class:'Response <Response>' object
+    :rtype: requests.Response
+    """
+
+    url = base_url + "/items?number={number}&limit=400".format(number=number)
 
     payload={}
     headers = {
@@ -65,8 +74,16 @@ def itemSpecsAttributesGet(sessionId):
 
     return response
 
-def itemCategoriesGet(sessionId):
-    url = "https://api.arenasolutions.com/v1/settings/items/categories"
+def getItemSpecs(sessionId, guid):
+    """Get specs of a certain item
+    
+    :param sessionId: token for current user session
+    :param guid: unique id of an item
+    :return: :class:'Response <Response>' object
+    :rtype: requests.Response
+    """
+
+    url = base_url + "/items/{guid}?includeEmptyAdditionalAttributes=true".format(guid=guid)
 
     payload={}
     headers = {
@@ -78,109 +95,25 @@ def itemCategoriesGet(sessionId):
 
     return response
 
-def itemCategoryGet(sessionId):
-    url = "https://api.arenasolutions.com/v1/settings/items/categories/FXH0EBFHS9S2L4K2MQPI"
+
+# Item BOM
+def getItemBom(sessionId, guid):
+    """Search for items in Arena by number
+    
+    :param sessionId: token for current user session
+    :param guid: unique id of an item
+    :return: :class:'Response <Response>' object
+    :rtype: requests.Response
+    """
+
+    url = base_url + "/items/{guid}/bom".format(guid=guid)
 
     payload={}
     headers = {
-        'arena_session_id': sessionId,
-        'Content-Type': 'application/json'
+    'arena_session_id': sessionId,
+    'Content-Type': 'application/json'
     }
 
     response = requests.request("GET", url, headers=headers, data=payload)
 
     return response
-
-def itemCategoryAttrubutesGet(sessionId):
-    url = "https://api.arenasolutions.com/v1/settings/items/categories/FXH0EBFHS9S2L4K2MQPI/attributes?includePossibleValues=true"
-
-    payload={}
-    headers = {
-        'arena_session_id': sessionId,
-        'Content-Type': 'application/json'
-    }
-
-    response = requests.request("GET", url, headers=headers, data=payload)
-
-    return response
-
-def itemBOMAttributesGet(sessionId):
-    url = "https://api.arenasolutions.com/v1/settings/items/bom/attributes?includePossibleValues=true"
-
-    payload={}
-    headers = {
-        'arena_session_id': sessionId,
-        'Content-Type': 'application/json'
-    }
-
-    response = requests.request("GET", url, headers=headers, data=payload)
-
-    return response
-
-def itemNumberFormatsGet(sessionId):
-    url = "https://api.arenasolutions.com/v1/settings/items/numberformats"
-
-    payload={}
-    headers = {
-        'arena_session_id': sessionId,
-        'Content-Type': 'application/json'
-    }
-
-    response = requests.request("GET", url, headers=headers, data=payload)
-
-    return response
-
-def itemNumberFormatGet(sessionId):
-    url = "https://api.arenasolutions.com/v1/settings/items/numberformats/R9TCQNRT4L4DWFXZDPKF"
-
-    payload={}
-    headers = {
-        'arena_session_id': sessionId,
-        'Content-Type': 'application/json'
-    }
-
-    response = requests.request("GET", url, headers=headers, data=payload)
-
-    return response
-
-def itemLifecyclePhasesGet(sessionId):
-    url = "https://api.arenasolutions.com/v1/settings/items/lifecyclephases"
-
-    payload={}
-    headers = {
-        'arena_session_id': sessionId,
-        'Content-Type': 'application/json'
-    }
-
-    response = requests.request("GET", url, headers=headers, data=payload)
-
-    return response
-
-def itemComplianceRequirementsGet(sessionId):
-    url = "https://api.arenasolutions.com/v1/settings/items/requirements"
-
-    payload={}
-    headers = {
-        'arena_session_id': sessionId,
-        'Content-Type': 'application/json'
-    }
-
-    response = requests.request("GET", url, headers=headers, data=payload)
-
-    return response
-
-def itemComplianceRequirementGet(sessionId):
-    url = "https://api.arenasolutions.com/v1/settings/items/requirements/ASCV96ACN4LM5O71TLSH"
-
-    payload={}
-    headers = {
-        'arena_session_id': sessionId,
-        'Content-Type': 'application/json'
-    }
-
-    response = requests.request("GET", url, headers=headers, data=payload)
-
-    return response
-
-## Supplier Settings
-# def supplierSummaryAttributesGet(sessionId):
