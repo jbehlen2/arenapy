@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.0
+* Added request to get bom line item details
+## 0.0.9
+* Added request to search for items by custom attribute "Finished Goods"
 ## 0.0.8
 * Added minimal requests
 ## 0.0.7

@@ -31,10 +31,10 @@ def login(email, password, workspaceId):
 
     return response
 
-def logout(sessionId):
+def logout(session_id):
     """Close API session
     
-    :param sessionId: token for current user session
+    :param session_id: token for current user session
     :return: :class:'Response <Response>' object
     :rtype: requests.Response
     """
@@ -43,7 +43,7 @@ def logout(sessionId):
 
     payload = ""
     headers = {
-        'arena_session_id': sessionId,
+        'arena_session_id': session_id,
         'Content-Type': 'application/json'
     }
 
@@ -53,10 +53,10 @@ def logout(sessionId):
 
 
 # Item
-def getItemSearch(sessionId, number):
+def getItemSearchByNumber(session_id, number):
     """Search for items in Arena by number
     
-    :param sessionId: token for current user session
+    :param session_id: token for current user session
     :param number: item number to search by
     :return: :class:'Response <Response>' object
     :rtype: requests.Response
@@ -66,7 +66,7 @@ def getItemSearch(sessionId, number):
 
     payload={}
     headers = {
-        'arena_session_id': sessionId,
+        'arena_session_id': session_id,
         'Content-Type': 'application/json'
     }
 
@@ -74,10 +74,31 @@ def getItemSearch(sessionId, number):
 
     return response
 
-def getItemSpecs(sessionId, guid):
+def getItemSearchByFinishedGood(session_id, param):
+    """Search for items in Arena by finished good attribute
+    
+    :param session_id: token for current user session
+    :param param: yes or no
+    :return: :class:'Response <Response>' object
+    :rtype: requests.Response
+    """
+
+    url = base_url + "/items?SAUDI7DIJBSATCRUN66M={param}&limit=400".format(param=param)
+
+    payload={}
+    headers = {
+        'arena_session_id': session_id,
+        'Content-Type': 'application/json'
+    }
+
+    response = requests.request("GET", url, headers=headers, data=payload)
+
+    return response
+
+def getItemSpecs(session_id, guid):
     """Get specs of a certain item
     
-    :param sessionId: token for current user session
+    :param session_id: token for current user session
     :param guid: unique id of an item
     :return: :class:'Response <Response>' object
     :rtype: requests.Response
@@ -87,7 +108,7 @@ def getItemSpecs(sessionId, guid):
 
     payload={}
     headers = {
-        'arena_session_id': sessionId,
+        'arena_session_id': session_id,
         'Content-Type': 'application/json'
     }
 
@@ -97,10 +118,10 @@ def getItemSpecs(sessionId, guid):
 
 
 # Item BOM
-def getItemBom(sessionId, guid):
+def getItemBom(session_id, guid):
     """Search for items in Arena by number
     
-    :param sessionId: token for current user session
+    :param session_id: token for current user session
     :param guid: unique id of an item
     :return: :class:'Response <Response>' object
     :rtype: requests.Response
@@ -110,8 +131,30 @@ def getItemBom(sessionId, guid):
 
     payload={}
     headers = {
-    'arena_session_id': sessionId,
-    'Content-Type': 'application/json'
+        'arena_session_id': session_id,
+        'Content-Type': 'application/json'
+    }
+
+    response = requests.request("GET", url, headers=headers, data=payload)
+
+    return response
+
+def getItemBomLine(session_id, item_guid, line_item_guid):
+    """Search for items in Arena by number
+    
+    :param session_id: token for current user session
+    :param item_guid: unique id of an item
+    :param line_item_guid: unique id of the bom line item
+    :return: :class:'Response <Response>' object
+    :rtype: requests.Response
+    """
+
+    url = base_url + "/items/{item_guid}/bom/line_item_guid".format(item_guid=item_guid, line_item_guid=line_item_guid)
+
+    payload={}
+    headers = {
+        'arena_session_id': session_id,
+        'Content-Type': 'application/json'
     }
 
     response = requests.request("GET", url, headers=headers, data=payload)
