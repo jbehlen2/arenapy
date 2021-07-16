@@ -119,7 +119,7 @@ def getItemSpecs(session_id, guid):
 
 # Item BOM
 def getItemBom(session_id, guid):
-    """Search for items in Arena by number
+    """Get the BOM of an item
     
     :param session_id: token for current user session
     :param guid: unique id of an item
@@ -139,17 +139,18 @@ def getItemBom(session_id, guid):
 
     return response
 
-def getItemBomLine(session_id, item_guid, line_item_guid):
-    """Search for items in Arena by number
+
+# Item Files
+def getItemFiles(session_id, guid):
+    """Get files from an item
     
     :param session_id: token for current user session
-    :param item_guid: unique id of an item
-    :param line_item_guid: unique id of the bom line item
+    :param guid: unique id of an item
     :return: :class:'Response <Response>' object
     :rtype: requests.Response
     """
 
-    url = base_url + "/items/{item_guid}/bom/line_item_guid".format(item_guid=item_guid, line_item_guid=line_item_guid)
+    url = base_url + "/items/{guid}/files".format(guid=guid)
 
     payload={}
     headers = {

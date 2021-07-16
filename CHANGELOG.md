@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.1.1
+* Added request to get files from an item
+* Removed request to get bom line item details
 ## 0.1.0
 * Added request to get bom line item details
 ## 0.0.9
