@@ -161,3 +161,26 @@ def getItemFiles(session_id, guid):
     response = requests.request("GET", url, headers=headers, data=payload)
 
     return response
+
+
+# File
+def getFileContent(session_id, guid):
+    """Get the contents of a file
+    
+    :param session_id: token for current user session
+    :param guid: unique id of an item
+    :return: :class:'Response <Response>' object
+    :rtype: requests.Response
+    """
+
+    url = base_url + "/files/{guid}/content".format(guid=guid)
+
+    payload={}
+    headers = {
+        'arena_session_id': session_id,
+        'Content-Type': 'application/json'
+    }
+
+    response = requests.request("GET", url, headers=headers, data=payload)
+
+    return response
