@@ -1,5 +1,7 @@
 # Changelog
 
+## 0.1.4
+* Bug fix in 'getItemSearch' endpoint
 ## 0.1.3
 * Modified some '# Item' endpoints to use a single request with dynamic input instead of a single endpoint for both 'number' and 'Finished Good'
 ## 0.1.2

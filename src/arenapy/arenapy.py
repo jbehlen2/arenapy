@@ -76,9 +76,8 @@ def getItemSearch(session_id, searchable_attributes):
     result = getItemSpecsAttributes(session_id)
     try:
         attributes = json.loads(result.content)['results']
-        if len(attributes) == 0: raise ValueError("No parameters were included to search by!")
-    except ValueError as e:
-        return __build_response(status_code=400, content={'error': e})
+    except KeyError as e:
+        return __build_response(status_code=400, content={'error': 'KeyError: {}'.format(e)})
 
     # Check params for attributes
     searchable_attributes_copy = copy.deepcopy(searchable_attributes)
