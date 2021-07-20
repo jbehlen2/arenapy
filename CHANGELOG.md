@@ -1,5 +1,7 @@
 # Changelog
 
+## 0.1.3
+* Modified some '# Item' endpoints to use a single request with dynamic input instead of a single endpoint for both 'number' and 'Finished Good'
 ## 0.1.2
 * Added request to get a file's content
 ## 0.1.1

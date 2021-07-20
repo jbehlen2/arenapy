@@ -1,9 +1,19 @@
 import requests
+from requests.models import Response
 import json
+import copy
 
 
 base_url = "https://api.arenasolutions.com/v1"
 
+
+# Utils
+def __build_response(status_code, content):
+    response = Response()
+    response.status_code = status_code
+    response.content = b'{}'.format(content)
+
+    return response
 
 # Access
 def login(email, password, workspaceId):
@@ -53,37 +63,42 @@ def logout(session_id):
 
 
 # Item
-def getItemSearchByNumber(session_id, number):
-    """Search for items in Arena by number
+def getItemSearch(session_id, searchable_attributes):
+    """Search for items in given parameters/values
     
     :param session_id: token for current user session
-    :param number: item number to search by
+    :param searchable_attributes: dict of attribute/value key pairs to search by
     :return: :class:'Response <Response>' object
     :rtype: requests.Response
     """
 
-    url = base_url + "/items?number={number}&limit=400".format(number=number)
+    # Get attributes
+    result = getItemSpecsAttributes(session_id)
+    try:
+        attributes = json.loads(result.content)['results']
+        if len(attributes) == 0: raise ValueError("No parameters were included to search by!")
+    except ValueError as e:
+        return __build_response(status_code=400, content={'error': e})
 
-    payload={}
-    headers = {
-        'arena_session_id': session_id,
-        'Content-Type': 'application/json'
-    }
+    # Check params for attributes
+    searchable_attributes_copy = copy.deepcopy(searchable_attributes)
+    for attribute in searchable_attributes.keys():
+        try:
+            result = next((dict for dict in attributes if dict['name'] == attribute), None)
+        except KeyError:
+            continue
+        if (result == None):
+            continue
+        else:
+            searchable_attributes_copy[result['guid']] = searchable_attributes[attribute]
+            del searchable_attributes_copy[attribute]
+        
 
-    response = requests.request("GET", url, headers=headers, data=payload)
+    url = base_url + '/items?'
+    for key, value in searchable_attributes_copy.items():
+        url = url + '{param}={value}&'.format(param=key, value=value)
 
-    return response
-
-def getItemSearchByFinishedGood(session_id, param):
-    """Search for items in Arena by finished good attribute
-    
-    :param session_id: token for current user session
-    :param param: yes or no
-    :return: :class:'Response <Response>' object
-    :rtype: requests.Response
-    """
-
-    url = base_url + "/items?SAUDI7DIJBSATCRUN66M={param}&limit=400".format(param=param)
+    url = url[:-1]
 
     payload={}
     headers = {
@@ -109,6 +124,22 @@ def getItemSpecs(session_id, guid):
     payload={}
     headers = {
         'arena_session_id': session_id,
+        'Content-Type': 'application/json'
+    }
+
+    response = requests.request("GET", url, headers=headers, data=payload)
+
+    return response
+
+
+# Settings
+## Item Settings
+def getItemSpecsAttributes(sessionId):
+    url = base_url + "/settings/items/attributes?includePossibleValues=true"
+
+    payload={}
+    headers = {
+        'arena_session_id': sessionId,
         'Content-Type': 'application/json'
     }
 
